@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/booksA": {
+    "/books": {
       "get": {
         "summary": "List of all books",
         "responses": {
@@ -26,7 +26,7 @@
                       "books": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/book"
+                        "$ref": "#/components/schemas/Book"
                       }
                     }
                   }
@@ -62,7 +62,7 @@
                       "books": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/book"
+                        "$ref": "#/components/schemas/Book"
                       }
                     }
                   }
@@ -73,7 +73,7 @@
         }
       }
     },
-    "/books": {
+    "/addBook": {
       "post": {
         "summary": "Add a new book",
         "requestBody": {
@@ -116,7 +116,7 @@
         }
       }
     },
-    "/books": {
+    "/deleteBook": {
       "delete": {
         "summary": "Delete selected book",
         "parameters": [
@@ -133,6 +133,83 @@
         "responses": {
           "200": {
             "description": "Book correctly deleted"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Create new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "success": true,
+            "token": "Token"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Login with existing user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "success": true,
+            "token": "Token"
+          },
+          "400": {
+            "success": false,
+            "message": "User does not exist"
+          }
+        }
+      }
+    },
+    "/userProfile": {
+      "get": {
+        "summary": "View profile details",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "success": true,
+            "user": "All user info"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "put": {
+        "summary": "Logout",
+        "responses": {
+          "200": {
+            "message": "Successful logout"
           }
         }
       }
@@ -186,6 +263,34 @@
           },
           "stock": {
             "type": "integer"
+          }
+        }
+      },
+      "NewUser": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
           }
         }
       }

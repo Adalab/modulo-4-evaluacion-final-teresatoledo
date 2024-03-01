@@ -70,7 +70,7 @@ server.get('/bookYear', async (req, res) => {
 	conex.end();
 	res.json(result);
 });
-server.post('/books', async (req, res) => {
+server.post('/addBook', async (req, res) => {
 	const { title, pages, price, publishDate, author, stock } = req.body;
 	const conex = await getConnection();
 	const sql =
@@ -105,7 +105,7 @@ server.put('/books/:id', async (req, res) => {
 	conex.end();
 	res.json({ success: true, message: 'Book correctly updated' });
 });
-server.delete('/books', async (req, res) => {
+server.delete('/deleteBook', async (req, res) => {
 	const conex = await getConnection();
 	const id = req.query.id;
 	const sql = 'DELETE FROM books WHERE bookId = ?';
