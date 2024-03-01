@@ -3,18 +3,21 @@ const cors = require('cors');
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const swaggerUI = require('swagger-ui-express');
+const swaggerConfig = require('./swagger.json');
+require('dotenv').config();
 
 const server = express();
 server.use(cors());
 server.use(express.json());
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 async function getConnection() {
 	const conex = await mysql.createConnection({
-		host: 'localhost',
-		user: 'root',
-		password: 'Ayeyita23.',
-		database: 'bookStore',
+		host: process.env.DB_HOST,
+		user: process.env.DB_USER,
+		password: process.env.DB_PASS,
+		database: process.env.DB_NAME,
 	});
 	await conex.connect();
 	return conex;
@@ -50,13 +53,14 @@ server.listen(port, () => {
 	console.log(`El servidor se está ejecutando en http://localhost:${port}`);
 });
 
+server.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerConfig));
 //Endpoints CRUD
 server.get('/books', async (req, res) => {
 	const conex = await getConnection();
 	const sql = 'SELECT * FROM books';
 	const [result] = await conex.query(sql);
 	conex.end();
-	res.json(result);
+	res.json({ Books: result });
 });
 server.get('/bookYear', async (req, res) => {
 	const conex = await getConnection();

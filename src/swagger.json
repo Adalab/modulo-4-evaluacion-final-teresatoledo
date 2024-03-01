@@ -1,0 +1,194 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Book store API",
+    "version": "1.0.0",
+    "description": "API to manage a bookstore inventary"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3112",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "paths": {
+    "/booksA": {
+      "get": {
+        "summary": "List of all books",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                      "books": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/book"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookYear": {
+      "get": {
+        "summary": "List of all books that matches year indicated",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Response will include books whose publication year is the one indicated or later "
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                      "books": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/book"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books": {
+      "post": {
+        "summary": "Add a new book",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Book inserted correctly"
+          }
+        }
+      }
+    },
+    "/books/{idbook}": {
+      "put": {
+        "summary": "Modify an existing book",
+        "parameters": [
+          {
+            "name": "idbook",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book correctly updated"
+          },
+          "404": {
+            "description": "Book does not exist"
+          }
+        }
+      }
+    },
+    "/books": {
+      "delete": {
+        "summary": "Delete selected book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID number of the book you want to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book correctly deleted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "idProject": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "pages": {
+            "type": "integer"
+          },
+          "price": {
+            "type": "integer"
+          },
+          "publishDate": {
+            "type": "integer"
+          },
+          "author": {
+            "type": "string"
+          },
+          "stock": {
+            "type": "integer"
+          }
+        }
+      },
+      "NewBook": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "pages": {
+            "type": "integer"
+          },
+          "price": {
+            "type": "integer"
+          },
+          "publishDate": {
+            "type": "integer"
+          },
+          "author": {
+            "type": "string"
+          },
+          "stock": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
