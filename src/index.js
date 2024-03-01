@@ -24,12 +24,12 @@ async function getConnection() {
 }
 //Funciones para la creación/autenticación del token
 const generateToken = (payload) => {
-	const token = jwt.sign(payload, 'secret', { expiresIn: '1h' });
+	const token = jwt.sign(payload, process.env.DB_KEY, { expiresIn: '1h' });
 	return token;
 };
 const verifyToken = (token) => {
 	try {
-		const verifyTkn = jwt.verify(token, 'secret');
+		const verifyTkn = jwt.verify(token, process.env.DB_KEY);
 		return verifyTkn;
 	} catch (error) {
 		return null;
@@ -134,7 +134,7 @@ server.post('/register', async (req, res) => {
 		const passwordHashed = await bcrypt.hash(password, 10);
 		const insertNewUser =
 			'INSERT INTO usuarios (email, nombre, direccion, password) values (?, ?, ?, ?)';
-		jwt.sign(password, 'secret', async (err, token) => {
+		jwt.sign(password, process.env.DB_KEY, async (err, token) => {
 			if (err) {
 				res.status(400).send({ message: 'Error' });
 			} else {
@@ -188,12 +188,16 @@ server.get('/userProfile', authenticate, async (req, res) => {
 	res.json({ success: true, user: result });
 });
 server.put('/logout', (req, res) => {
-	const bearer = req.headers['authorization'];
-	jwt.sign(bearer, '', { expiresIn: '1' }, (logoutToken, error) => {
-		if (logoutToken) {
-			res.json({ message: 'Successful logout' });
-		} else {
-			res.json({ message: 'Incorrect logout' });
+	jwt.sign(
+		{ data: '' },
+		process.env.DB_KEY,
+		{ expiresIn: 1 },
+		(error, logoutToken) => {
+			if (!error) {
+				res.json({ token: logoutToken, message: 'Successful logout' });
+			} else {
+				res.json({ message: 'Incorrect logout' });
+			}
 		}
-	});
+	);
 });
